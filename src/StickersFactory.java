@@ -1,18 +1,18 @@
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
 public class StickersFactory {
 
-    public void make() throws Exception {
+    public void make(InputStream inputStream, String nameOfFile) throws Exception {
 
         // leitura da imagem
-        BufferedImage originalImage = ImageIO.read(new File("entry/movie.jpg"));
+        BufferedImage originalImage = ImageIO.read(inputStream);
 
         // cria nova imagem em memória com transparência e com tamanho novo
         int width = originalImage.getWidth();
@@ -33,13 +33,8 @@ public class StickersFactory {
         graphics.drawString("TOPZERA", 200, newHeight - 100);
 
         // escrever a nova imagem em um arquivo
-        ImageIO.write(newImage, "png", new File("output/sticker.png"));
+        ImageIO.write(newImage, "png", new File(nameOfFile));
 
-    }
-
-    public static void main(String[] args) throws Exception {
-        var generate = new StickersFactory();
-        generate.make();
     }
 
 }

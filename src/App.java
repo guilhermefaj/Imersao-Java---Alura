@@ -1,4 +1,6 @@
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -25,10 +27,19 @@ public class App {
 
         // Manipular e exibir os dados
 
+        var maker = new StickersFactory();
+
         for (Map<String, String> movie : movieList) {
-            System.out.println(movie.get("title"));
-            System.out.println(movie.get("image"));
-            System.out.println(movie.get("imDbRating"));
+
+            String urlImage = movie.get("image");
+            String movieTitle = movie.get("title");
+
+            InputStream inputStream = new URL(urlImage).openStream();
+            String nameOfFile = movieTitle + ".png";
+
+            maker.make(inputStream, nameOfFile);
+
+            System.out.println(movieTitle);
             System.out.println();
         }
     }
