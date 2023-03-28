@@ -33,7 +33,7 @@ public class StickersFactory {
         graphics.drawString("TOPZERA", 200, newHeight - 100);
 
         // escrever a nova imagem em um arquivo
-        ImageIO.write(newImage, "png", new File(nameOfFile));
+        ImageIO.write(newImage, "png", new File("output/" + nameOfFile));
 
     }
 
