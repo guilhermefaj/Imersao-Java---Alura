@@ -1,12 +1,6 @@
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
-import java.util.Map;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -14,32 +8,25 @@ public class App {
         // fazer uma conexão HTTP e buscar os top filmes
 
         String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
-        URI adress = URI.create(url);
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder(adress).GET().build();
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-        String body = response.body();
 
-        // extrair só os dados que interessam (titulo, poster, nota)
-
-        var parser = new JsonParser();
-        List<Map<String, String>> movieList = parser.parse(body);
+        var http = new ClientHttp();
+        String json = http.searchData(url);
 
         // Manipular e exibir os dados
+        var extractor = new IMDBContentExtractor();
+        List<Content> contents = extractor.extractContent(json);
 
         var maker = new StickersFactory();
 
-        for (Map<String, String> movie : movieList) {
+        for (int i = 0; i < 10; i++) {
+            Content content = contents.get(i);
 
-            String urlImage = movie.get("image");
-            String movieTitle = movie.get("title");
-
-            InputStream inputStream = new URL(urlImage).openStream();
-            String nameOfFile = movieTitle + ".png";
+            InputStream inputStream = new URL(content.getUrlImage()).openStream();
+            String nameOfFile = content.getTitle() + ".png";
 
             maker.make(inputStream, nameOfFile);
 
-            System.out.println(movieTitle);
+            System.out.println(content.getTitle());
             System.out.println();
         }
     }
